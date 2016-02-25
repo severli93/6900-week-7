@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Example 4: Brushing + dispatch + crossfilter: case for multiple modules</title>
+        <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="../global.css"/>
+        <link rel="stylesheet" href="style.css"/>
+    </head>
+    <body>
+        <div class="container">
+            <div class="controls">
+                <div class="module">
+                    <span class="legend">Date Range</span>
+                    <span class="start-date"></span> -
+                    <span class="end-date"></span>
+                </div>
+                <div class="module">
+                    <span class="legend">Trip Count</span>
+                    <span class="count"></span>
+                </div>
+                <div style="clear:both"></div>
+            </div>
+            <div class="plot"></div>
+            <div class="plot" id="plot-2"></div>
+
+        </div>
+
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+        <script src="../lib/crossfilter/crossfilter.js"></script>
+        <script src="script.js"></script>
+    </body>
+</html>

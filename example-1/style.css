@@ -1,0 +1,18 @@
+.plot{
+    width:33%;
+	height:250px;
+	float:left;
+}
+.controls{
+    height:auto;
+    padding: 15px 0;
+    font-size:3em;
+    font-family:Helvetica,sans-serif;
+    font-weight:lighter;
+}
+.controls .input-group{
+    width:45%;
+    margin:0 5% 0 0;
+    float:left;
+}
+
