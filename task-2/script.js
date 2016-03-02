@@ -12,15 +12,34 @@ var plot = d3.select('.plot').append('svg')
 
 var globalDispatcher = d3.dispatch('changetimeextent');
 
+globalDispatcher.on('changetimeextent',function(E){
+    d3.select('.start-date').html(E[0])//inject in the span (HTML element)
+    d3.select('.end-date').html(E[1])
+})
+
+var trips;//global variable
 
 d3.csv('../data/hubway_trips_reduced.csv',parse,dataLoaded);
 
 function dataLoaded(err,rows){
 
+    //1.create crossfilter
+    //! crossfilter dont deal with N/A or Null very well
+     trips = crossfilter(rows);
+    //in order to filter by column, create a dimension for the column
+    var tripsbyTime=trips.dimension(function(row){return row.startTime;})//run row by row //.getFullyear() create an artificial
+
+    globalDispatcher.on('changetimeextent.crossfilter',function(E){
+        //E-->[a,b]
+        //console.log('E',E);
+        tripsbyTime.filter(E);//filter
+        tripsbyTime.top(5) //
+        console.log('tripsbyTime',tripsbyTime.top(Infinity).length);
+    })
     var timeExtent = [new Date(2011,6,15),new Date(2012,6,15)],
         binSize = d3.time.day,
         bins = d3.time.day.range(timeExtent[0],timeExtent[1]);
-    bins.push(timeExtent[1]);
+    bins.push(timeExtent[1]);//add a new element at the end of the array    unshift shift push pop
 
     //Scales and axis
     var scaleX = d3.time.scale().domain(timeExtent).range([0,w]),
@@ -49,9 +68,20 @@ function dataLoaded(err,rows){
 
     plot.append('g').attr('class','axis axis-x')
         .attr('transform','translate(0,'+h+')')
-        .call(axisX);
-
+       // .call(axisX);
+    var newBrush= d3.svg.brush()
+        .x(scaleX)
+        .on('brush',function(){
+            var E=newBrush.extent();
+                //console.log(newBrush.extent())
+           // console.log(newBrush.empty())//see if newBrush is empty
+            globalDispatcher.changetimeextent(E)//[a,b]
+        })
+    plot.append('g').attr('class','brush')
+        .call(newBrush)
+        .selectAll('rect').attr('height',h)
 }
+
 
 function parse(d){
     if(+d.duration<0) return;
